@@ -7,6 +7,8 @@ const rateLimiter = require('./middleware/rateLimiter');
 const db = require('./config/db');
 const logger = require('./middleware/logger');
 const proxyRouter = require('./routes/proxy');
+const apiKeysRouter = require('./routes/apiKeys');
+const analyticsRouter = require('./routes/analytics');
 
 dotenv.config();
 
@@ -43,6 +45,9 @@ app.get('/protected', rateLimiter(5, 30), auth, (req, res) => {
 });
 
 app.use('/api', rateLimiter(100, 60), auth, proxyRouter);
+
+app.use('/api-keys', apiKeysRouter);
+app.use('/analytics', analyticsRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
